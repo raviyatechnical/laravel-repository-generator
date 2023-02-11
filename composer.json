@@ -1,12 +1,16 @@
 {
     "name": "raviyatechnical/laravel-repository-generator",
-    "description": "Quotes Package",
+    "description": "Generate Laravel Repositories | Laravel Dependency Injection",
     "keywords": [
+        "generator",
+        "php",
+        "cli",
+        "generator",
         "laravel",
-        "preset",
-        "tailwindcss",
-        "authentication",
-        "laravel-ui"
+        "artisan",
+        "repository",
+        "repositories",
+        "dependency injection"
     ],
     "type": "library",
     "license": "MIT",
