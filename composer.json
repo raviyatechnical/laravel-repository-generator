@@ -9,7 +9,7 @@
         "laravel-ui"
     ],
     "type": "library",
-    "license": "GPL",
+    "license": "MIT",
     "authors": [
         {
             "name": "Bhargav Raviya",
