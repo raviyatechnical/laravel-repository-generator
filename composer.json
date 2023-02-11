@@ -26,13 +26,10 @@
         }
     },
     "minimum-stability": "dev",
-    "require": {
-        "intervention/image": "^2.7.2"
-    },
     "extra": {
         "laravel": {
             "providers": [
-                "RaviyaTechnical\\RepositoryGenerator"
+                "RaviyaTechnical\\RepositoryGenerator\\RepositoryGeneratorServiceProvider"
             ]
         }
     }

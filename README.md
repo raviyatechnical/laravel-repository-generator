@@ -1,5 +1,6 @@
 <br />
 <div align="center">
+  <img src="https://www.rajtechnologies.com/ui/images/raj-technologies-logo-top-panel.jpg" alt="Logo" width=120>  
 <h1 align="center">Laravel Repository Generator</h1>
   <p align="center">
     Quickly generate repositories for your projects!
@@ -38,7 +39,7 @@ manual binding) to the Service Container so you can inject the interface into yo
 ## Installation
 Require the Laravel Repository Generator with composer.
 ```
-composer require raviyatechnical/laravel-repository-generator
+composer require raviyatechnical/laravel-repository-generator:dev-master --dev
 ```
 
 ### Publish config (optional)
@@ -127,14 +128,6 @@ class RepositoryServiceProvider extends ServiceProvider
    }
 }
 ```
-
-<!-- ## More generator packages
-Looking for more ways to speed up your workflow? Make sure to check out these packages.
-
-- [Laravel Action Generator](https://github.com/timwassenburg/laravel-action-generator)
-- [Laravel Pivot Table Generator](https://github.com/timwassenburg/laravel-pivot-table-generator)
-- [Laravel Repository Generator](https://github.com/timwassenburg/laravel-repository-generator)
-- [Laravel Service Generator](https://github.com/timwassenburg/laravel-service-generator) -->
 
 ## Contributing
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
