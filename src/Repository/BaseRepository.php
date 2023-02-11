@@ -23,6 +23,14 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getQuery()
+    {
+        return $this->model::query();
+    }
+
+    /**
      * @return Collection
      */
     public function all()
@@ -77,10 +85,23 @@ class BaseRepository implements EloquentRepositoryInterface
      * @param array $attributes
      * @return Model
      */
-    public function update(int $id, array $attributes): Model
+    public function update(int $id, array $attributes)
     {
         $model = $this->find($id);
 
         return $model->update($attributes);
+    }
+
+    /**
+     * @param int $id
+     * @param array $attributes
+     * @return Model
+     */
+    public function updateAndGet(int $id, array $attributes)
+    {
+        $model = $this->find($id);
+        $model->update($attributes);
+        $newModel = $this->find($id);
+        return $newModel;
     }
 }

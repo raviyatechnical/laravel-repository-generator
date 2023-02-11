@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 */
 interface EloquentRepositoryInterface
 {
+    /*
+     * @return Collection
+    */
+    public function all();
+
     /**
     * @param array $attributes
     * @return Model
@@ -43,5 +48,12 @@ interface EloquentRepositoryInterface
      * @param array $attributes
      * @return mixed
      */
-    public function update(int $id, array $attributes): Model;
+    public function update(int $id, array $attributes);
+
+    /**
+     * @param int $id
+     * @param array $attributes
+     * @return mixed
+     */
+    public function updateAndGet(int $id, array $attributes);
 }

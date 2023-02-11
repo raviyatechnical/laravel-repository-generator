@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use TimWassenburg\RepositoryGenerator\Repository\BaseRepository;
+use RaviyaTechnical\RepositoryGenerator\Repository\BaseRepository;
 use App\Repositories\DummyClassInterface;
 use {{ namespacedModel }};
 
