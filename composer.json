@@ -1,0 +1,35 @@
+{
+    "name": "raviyatechnical/laravel-repository-generator",
+    "description": "Quotes Package",
+    "keywords": [
+        "laravel",
+        "preset",
+        "tailwindcss",
+        "authentication",
+        "laravel-ui"
+    ],
+    "type": "library",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Bhargav Raviya",
+            "email": "raviyatechnical@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "RaviyaTechnical\\RepositoryGenerator\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "intervention/image": "^2.7.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RaviyaTechnical\\RepositoryGenerator"
+            ]
+        }
+    }
+}
