@@ -2,8 +2,8 @@
 
 namespace RaviyaTechnical\RepositoryGenerator\Repository;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
@@ -21,87 +21,129 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         $this->model = $model;
     }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function getQuery()
+    
+    public function query()
     {
         return $this->model::query();
     }
 
     /**
+     * @param array $columns
+     * @param array $relations
      * @return Collection
      */
-    public function all()
+    public function all(array $columns = ['*'], array $relations = []): Collection
     {
-        return $this->model->all();
+        return $this->model->with($relations)->get($columns);
     }
 
     /**
-     * @param array $attributes
+     * Get all trashed models.
      *
+     * @return Collection
+     */
+    public function allTrashed(): Collection
+    {
+        return $this->model->onlyTrashed()->get();
+    }
+
+    /**
+     * Find model by id.
+     *
+     * @param int $modelId
+     * @param array $columns
+     * @param array $relations
+     * @param array $appends
      * @return Model
      */
-    public function create(array $attributes): Model
-    {
-        return $this->model->create($attributes);
+    public function findById(
+        int $modelId,
+        array $columns = ['*'],
+        array $relations = [],
+        array $appends = []
+    ): ?Model {
+        return $this->model->select($columns)->with($relations)->findOrFail($modelId)->append($appends);
     }
 
     /**
-     * @param int $id
-     * @param array $with
-     * @param array $params
+     * Find trashed model by id.
+     *
+     * @param int $modelId
      * @return Model
      */
-    public function find(int $id, array $with = [], array $params = []): ?Model
+    public function findTrashedById(int $modelId): ?Model
     {
-        return $this->model->with($with)->findOrFail($id);;
+        return $this->model->withTrashed()->findOrFail($modelId);
     }
 
-
     /**
-     * @param int $id
-     * @return Model|null
-     */
-    public function findWithTrash(int $id): ?Model
-    {
-        return $this->model::query()->withTrashed()->find($id);
-    }
-
-
-    /**
-     * @param int $id
-     * @return mixed
-     */
-    public function delete(int $id)
-    {
-        return $this->model::query()->find($id)->delete();
-    }
-
-
-    /**
-     * @param int $id
-     * @param array $attributes
+     * Find only trashed model by id.
+     *
+     * @param int $modelId
      * @return Model
      */
-    public function update(int $id, array $attributes)
+    public function findOnlyTrashedById(int $modelId): ?Model
     {
-        $model = $this->find($id);
-
-        return $model->update($attributes);
+        return $this->model->onlyTrashed()->findOrFail($modelId);
     }
 
     /**
-     * @param int $id
-     * @param array $attributes
+     * Create a model.
+     *
+     * @param array $payload
      * @return Model
      */
-    public function updateAndGet(int $id, array $attributes)
+    public function create(array $payload): ?Model
     {
-        $model = $this->find($id);
-        $model->update($attributes);
-        $newModel = $this->find($id);
-        return $newModel;
+        $model = $this->model->create($payload);
+
+        return $model->fresh();
+    }
+
+    /**
+     * Update existing model.
+     *
+     * @param int $modelId
+     * @param array $payload
+     * @return bool
+     */
+    public function update(int $modelId, array $payload): bool
+    {
+        $model = $this->findById($modelId);
+
+        return $model->update($payload);
+    }
+
+    /**
+     * Delete model by id.
+     *
+     * @param int $modelId
+     * @return bool
+     */
+    public function deleteById(int $modelId): bool
+    {
+        return $this->findById($modelId)->delete();
+    }
+
+    /**
+     * Restore model by id.
+     *
+     * @param int $modelId
+     * @return bool
+     */
+    public function restoreById(int $modelId): bool
+    {
+        return $this->findOnlyTrashedById($modelId)->restore();
+    }
+
+    /**
+     * Permanently delete model by id.
+     *
+     * @param int $modelId
+     * @return bool
+     */
+    public function permanentlyDeleteById(int $modelId): bool
+    {
+        return $this->findTrashedById($modelId)->forceDelete();
     }
 }

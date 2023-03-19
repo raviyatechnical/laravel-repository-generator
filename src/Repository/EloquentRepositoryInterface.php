@@ -2,6 +2,7 @@
 
 namespace RaviyaTechnical\RepositoryGenerator\Repository;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,50 +11,94 @@ use Illuminate\Database\Eloquent\Model;
 */
 interface EloquentRepositoryInterface
 {
-    /*
+    
+    public function query();
+    /**
+     * Get all models.
+     *
+     * @param array $columns
+     * @param array $relations
      * @return Collection
-    */
-    public function all();
+     */
+    public function all(array $columns = ['*'], array $relations = []): Collection;
 
     /**
-    * @param array $attributes
-    * @return Model
-    */
-    public function create(array $attributes): Model;
+     * Get all trashed models.
+     *
+     * @return Collection
+     */
+    public function allTrashed(): Collection;
 
     /**
-     * @param int $id
-     * @param array $with
-     * @param array $params
+     * Find model by id.
+     *
+     * @param int $modelId
+     * @param array $columns
+     * @param array $relations
+     * @param array $appends
      * @return Model
      */
-    public function find(int $id, array $with = [], array $params = []): ?Model;
+    public function findById(
+        int $modelId,
+        array $columns = ['*'],
+        array $relations = [],
+        array $appends = []
+    ): ?Model;
 
     /**
-     * @param int $id
-     * @return Model|null
+     * Find trashed model by id.
+     *
+     * @param int $modelId
+     * @return Model
      */
-    public function findWithTrash(int $id): ?Model;
-
+    public function findTrashedById(int $modelId): ?Model;
 
     /**
-     * @param int $id
-     * @return mixed
+     * Find only trashed model by id.
+     *
+     * @param int $modelId
+     * @return Model
      */
-    public function delete(int $id);
-
-
-    /**
-     * @param int $id
-     * @param array $attributes
-     * @return mixed
-     */
-    public function update(int $id, array $attributes);
+    public function findOnlyTrashedById(int $modelId): ?Model;
 
     /**
-     * @param int $id
-     * @param array $attributes
-     * @return mixed
+     * Create a model.
+     *
+     * @param array $payload
+     * @return Model
      */
-    public function updateAndGet(int $id, array $attributes);
+    public function create(array $payload): ?Model;
+
+    /**
+     * Update existing model.
+     *
+     * @param int $modelId
+     * @param array $payload
+     * @return bool
+     */
+    public function update(int $modelId, array $payload): bool;
+
+    /**
+     * Delete model by id.
+     *
+     * @param int $modelId
+     * @return bool
+     */
+    public function deleteById(int $modelId): bool;
+
+    /**
+     * Restore model by id.
+     *
+     * @param int $modelId
+     * @return bool
+     */
+    public function restoreById(int $modelId): bool;
+
+    /**
+     * Permanently delete model by id.
+     *
+     * @param int $modelId
+     * @return bool
+     */
+    public function permanentlyDeleteById(int $modelId): bool;
 }
