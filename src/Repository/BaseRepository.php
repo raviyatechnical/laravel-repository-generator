@@ -4,6 +4,7 @@ namespace RaviyaTechnical\RepositoryGenerator\Repository;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
@@ -21,6 +22,16 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         $this->model = $model;
     }
+
+    // Log Error 
+
+    public function LogError($exception, $dump = true)
+    {
+        if (config('app.env') == 'local' && $dump) {
+            dd($exception);
+        }
+        Log::error($exception);
+    }
     
     public function query()
     {
@@ -34,7 +45,11 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function all(array $columns = ['*'], array $relations = []): Collection
     {
-        return $this->model->with($relations)->get($columns);
+        try {
+            return $this->model->with($relations)->get($columns);
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -44,7 +59,11 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function allTrashed(): Collection
     {
-        return $this->model->onlyTrashed()->get();
+        try {
+            return $this->model->onlyTrashed()->get();
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -62,7 +81,11 @@ class BaseRepository implements EloquentRepositoryInterface
         array $relations = [],
         array $appends = []
     ): ?Model {
-        return $this->model->select($columns)->with($relations)->findOrFail($modelId)->append($appends);
+        try {
+            return $this->model->select($columns)->with($relations)->findOrFail($modelId)->append($appends);
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -73,7 +96,11 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function findTrashedById(int $modelId): ?Model
     {
-        return $this->model->withTrashed()->findOrFail($modelId);
+        try {
+            return $this->model->withTrashed()->findOrFail($modelId);
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -84,7 +111,11 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function findOnlyTrashedById(int $modelId): ?Model
     {
-        return $this->model->onlyTrashed()->findOrFail($modelId);
+        try {
+            return $this->model->onlyTrashed()->findOrFail($modelId);
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -95,9 +126,12 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function create(array $payload): ?Model
     {
-        $model = $this->model->create($payload);
-
-        return $model->fresh();
+        try {   
+            $model = $this->model->create($payload);
+            return $model->fresh();
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -109,9 +143,12 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function update(int $modelId, array $payload): bool
     {
-        $model = $this->findById($modelId);
-
-        return $model->update($payload);
+        try {  
+            $model = $this->findById($modelId);
+            return $model->update($payload);
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -122,7 +159,11 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function deleteById(int $modelId): bool
     {
-        return $this->findById($modelId)->delete();
+        try {  
+            return $this->findById($modelId)->delete();
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -133,7 +174,11 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function restoreById(int $modelId): bool
     {
-        return $this->findOnlyTrashedById($modelId)->restore();
+        try {  
+            return $this->findOnlyTrashedById($modelId)->restore();
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 
     /**
@@ -144,6 +189,10 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function permanentlyDeleteById(int $modelId): bool
     {
-        return $this->findTrashedById($modelId)->forceDelete();
+        try {  
+            return $this->findTrashedById($modelId)->forceDelete();
+        } catch (\Exception $e) {
+            $this->LogError($e);
+        }
     }
 }
